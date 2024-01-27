@@ -3,9 +3,11 @@ package hello.core.lifecycle;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.Setter;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 
 @Setter
-public class NetworkClient {
+public class NetworkClient implements InitializingBean, DisposableBean {
 
     private String url;
 
@@ -27,16 +29,26 @@ public class NetworkClient {
         System.out.println("close : " + url);
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("NetworkClient.init");
+//    @PostConstruct
+//    public void init() {
+//        System.out.println("NetworkClient.init");
+//    }
+//
+//    @PreDestroy
+//    public void close() {
+//        System.out.println("NetworkClient.close");
+//    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("NetworkClient.afterPropertiesSet");
         connect();
         call("초기화 연결 메시지");
     }
 
-    @PreDestroy
-    public void close() {
-        System.out.println("NetworkClient.close");
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("NetworkClient.destroy");
         disconnect();
     }
 }
